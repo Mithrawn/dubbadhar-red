@@ -1796,7 +1796,7 @@ function getAlpha(string) {
 // generators
 function hexString(rgba, a) {
    var a = (a !== undefined && rgba.length === 3) ? a : rgba[3];
-   return "#" + hexDouble(rgba[0]) 
+   return "#" + hexDouble(rgba[0])
               + hexDouble(rgba[1])
               + hexDouble(rgba[2])
               + (
@@ -16600,7 +16600,7 @@ imperial = {
 , yd2: {
     name: {
       singular: 'Square Yard'
-    , plural: 'Square Yards'  
+    , plural: 'Square Yards'
     }
   , to_anchor: 9
   }
@@ -17038,7 +17038,7 @@ module.exports = {
       ratio: 1/10.76391
     },
     imperial: {
-      unit: 'ft-cd',      
+      unit: 'ft-cd',
 	  ratio: 10.76391
     }
   }
@@ -17806,7 +17806,7 @@ time = {
       singular: 'Hour'
     , plural: 'Hours'
     }
-  , to_anchor: 60 * 60 
+  , to_anchor: 60 * 60
   }
 , d: {
     name: {
@@ -17840,7 +17840,7 @@ time = {
 
 
 module.exports = {
-  metric: time 
+  metric: time
 , _anchors: {
     metric: {
       unit: 's'
@@ -37557,6 +37557,19 @@ const settings = {
     MobroSDK.addChannelListener('general_memory_used', data => {
       memoryData.innerHTML = convert(parseFloat(data.payload.value)).from(data.payload.unit).to('GB').toFixed(2);
     });
+    const h2oTemp = document.getElementById('h2o-chart-doughnut');
+    MobroSDK.addChannelListener('custom_h2o_temp', data => {
+      if(data.payload && data.payload.sensortype) {
+        if(!charts.h2oTemp){
+        charts.h2oTemp = createDoughnuts(document.getElementById("h2o-chart-doughnut"));
+      }
+        charts.h2oTemp.chart.data.datasets[0].data[0] = parseFloat(data.payload.value);
+        charts.h2oTemp.chart.data.datasets[0].data[1] = parseFloat(100 - data.payload.value);
+        charts.h2oTemp.chart.update();
+      } else {
+        h2oTemp.style.display = 'none';
+        }
+    });
     MobroSDK.emit("monitor:hardware").then(data => {
       document.getElementById("mobro-cpu-name").innerHTML = data.processor.cpus[0].name;
       document.getElementById("mobro-gpu-name").innerHTML = data.graphics.gpus[0].name;
@@ -37579,8 +37592,8 @@ const settings = {
           cpuFan.style.display = 'block';
         }
 
-        charts.cpuFan.chart.data.datasets[0].data[0] = parseFloat(data.payload.value);
-        charts.cpuFan.chart.data.datasets[0].data[1] = parseFloat(data.payload.avg - data.payload.value);
+        charts.cpuFan.chart.data.datasets[0].data[0] = parseFloat(data.payload.value/data.payload.max)*100;
+        charts.cpuFan.chart.data.datasets[0].data[1] = parseFloat((data.payload.avg - data.payload.value)/data.payload.max)*100;
         charts.cpuFan.chart.update();
       } else {
         cpuFan.style.display = 'none';
@@ -37595,7 +37608,7 @@ const settings = {
         }
 
         charts.gpuFan.chart.data.datasets[0].data[0] = parseFloat(data.payload.value);
-        charts.gpuFan.chart.data.datasets[0].data[1] = parseFloat(data.payload.avg - data.payload.value);
+        charts.gpuFan.chart.data.datasets[0].data[1] = parseFloat(100 - data.payload.value);
         charts.gpuFan.chart.update();
       } else {
         gpuFan.style.display = 'none';
@@ -37635,6 +37648,7 @@ function initCharts() {
     "gpuLoad": createLine(document.getElementById("gpu-chart-line")),
     "gpuTemp": createDoughnuts(document.getElementById("gpu-chart-doughnut")),
     "ramUsage": createDoughnuts(document.getElementById("ram-chart-doughnut")),
+    "h2oTemp": null,
     "vramUsage": null,
     "cpuFan": null,
     "gpuFan": null
@@ -37659,7 +37673,7 @@ function createDoughnuts(element) {
     data: {
       datasets: [{
         data: [0, 0],
-        backgroundColor: ['rgba(0, 255, 30, 1)', 'rgb(0,0,0,0)'],
+        backgroundColor: ['rgba(0, 255, 255, 1)', 'rgb(0,0,0,0)'],
         borderWidth: 0
       }]
     },
@@ -37676,7 +37690,7 @@ function createClosedDoughnuts(element) {
     data: {
       datasets: [{
         data: [2, 1],
-        backgroundColor: ['rgba(255, 0, 0, 1)', 'rgb(0,0,0,0)'],
+        backgroundColor: ['rgba(0, 255, 255, 1)', 'rgb(0,0,0,0)'],
         borderWidth: 0
       }]
     },
@@ -37729,7 +37743,7 @@ function createLine(element, interpolate = false) {
       datasets: [{
         lineTension: 0,
         data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        borderColor: 'rgba(255, 58, 58, 1)',
+        borderColor: 'rgba(0, 0, 0, 1)',
         borderWidth: 2,
         pointRadius: '0',
         fill: false
@@ -37780,7 +37794,7 @@ function configureChartJS() {
         let textX = Math.round(width / 2),
             textY = (height + chart.chartArea.top) / 2;
         ctx.font = fontSize / 3 + "px sans-serif";
-        ctx.fillStyle = "#FFF";
+        ctx.fillStyle = "#000";
         ctx.textAlign = "center";
         let text_name = chart.canvas.getAttribute('data-name');
         ctx.fillText(text_name, Math.round(width / 2), textY - height / 5);
@@ -37794,15 +37808,15 @@ function configureChartJS() {
 
         if (chart.canvas.getAttribute('data-border') === 'margins') {
           if (percent < chart.config.options.breakpoints.orange) {
-            chart.config.data.datasets[0].backgroundColor[0] = 'rgba(255, 90, 0, 1)';
+            chart.config.data.datasets[0].backgroundColor[0] = 'rgba(0, 255, 255, 1)';
           }
 
           if (percent > chart.config.options.breakpoints.orange) {
-            chart.config.data.datasets[0].backgroundColor[0] = 'rgba(255, 45, 0, 1)';
+            chart.config.data.datasets[0].backgroundColor[0] = 'rgba(0, 0, 0, 1)';
           }
 
           if (percent > chart.config.options.breakpoints.red) {
-            chart.config.data.datasets[0].backgroundColor[0] = 'rgba(255, 0, 0, 1)';
+            chart.config.data.datasets[0].backgroundColor[0] = 'rgba(0, 0, 0, 1)';
           }
         }
 
@@ -37820,17 +37834,17 @@ function configureChartJS() {
         let lineWidth = chart.radiusLength / 4;
         ctx.lineWidth = lineWidth; //green path
 
-        ctx.strokeStyle = "#FF5A00";
+        ctx.strokeStyle = "#978F0C";
         ctx.beginPath();
         ctx.arc(width / 2, height / 2 + height / 21.05, chart.chart.controller.outerRadius - lineWidth / 2, chart.chart.config.options.rotation, chart.chart.config.options.rotation + chart.chart.config.options.circumference * chart.chart.config.options.breakpoints.orange / 100);
         ctx.stroke(); //yellow path
 
-        ctx.strokeStyle = "#FF2D00";
+        ctx.strokeStyle = "#929292";
         ctx.beginPath();
         ctx.arc(width / 2, height / 2 + height / 21.05, chart.chart.controller.outerRadius - lineWidth / 2, chart.chart.config.options.rotation + chart.chart.config.options.circumference * chart.chart.config.options.breakpoints.orange / 100, chart.chart.config.options.circumference * 0.10);
         ctx.stroke(); //red path
 
-        ctx.strokeStyle = "#FF0000";
+        ctx.strokeStyle = "#000000";
         ctx.beginPath();
         ctx.arc(width / 2, height / 2 + height / 21.05, chart.chart.controller.outerRadius - lineWidth / 2, chart.chart.config.options.rotation + chart.chart.config.options.circumference * chart.chart.config.options.breakpoints.red / 100, chart.chart.config.options.rotation + chart.chart.config.options.circumference);
         ctx.stroke();

@@ -1,17 +1,15 @@
 {
   "channels": [{
-    "name": "theme_fan_speed_cpu",
+    "name": "custom_h2o_temp",
     "sources": "all",
-    "hardwaretype": "Mainboard",
-    "sensortype": "Fan",
-    "fallbackToFirstValue": true,
+    "hardwaretype": "Misc",
+    "sensortype": "Temperature",
+    "fallbackToFirstValue": false,
     "extract": [{
       "byLabel": [{
-        "includes": "(Chassis|chassis)"
+        "includes": "Corsair"
       }, {
-        "includes": "cpu"
-      }, {
-        "includes": "Cpu"
+        "includes": "Temperature"
       }
       ]
     }]
@@ -19,56 +17,30 @@
     "name": "theme_fan_speed_gpu",
     "sources": "all",
     "hardwaretype": "Graphics",
+    "sensortype": "Usage",
+    "fallbackToFirstValue": true,
+    "extract": [{
+      "byLabel": [ {
+        "includes": "GPU Fan"
+      }, {
+        "includes": "Usage"
+      }
+      ]
+    }]
+  },{
+    "name": "theme_fan_speed_cpu",
+    "sources": "all",
+    "hardwaretype": "Misc",
     "sensortype": "Fan",
     "fallbackToFirstValue": true,
     "extract": [{
       "byLabel": [ {
-        "includes": "GPU"
+        "includes": "Corsair"
       }, {
-        "includes": "gpu"
-      }, {
-        "includes": "Gpu"
+        "includes": "Fan1"
       }
       ]
     }]
-  },{
-    "name": "theme_vram",
-    "sources": "all",
-    "hardwaretype": "Graphics",
-    "sensortype": "Data",
-    "fallbackToFirstValue": false,
-    "extract": [{
-      "byLabel": [ {
-        "includes": "Memory Used"
-      },{
-        "includes": "Memory Usage"
-      }
-      ]
-    }]
-  },{
-    "name": "theme_vram_percentage",
-    "sources": "all",
-    "hardwaretype": "Graphics",
-    "sensortype": "Usage",
-    "fallbackToFirstValue": false,
-    "extract": [{
-      "byLabel": [ {
-        "includes": "Memory",
-        "excludes": "Controller"
-      }
-      ]
-    }]
-  },{
-    "name": "theme_vram_total",
-    "sources": "all",
-    "hardwaretype": "Graphics",
-    "sensortype": "Data",
-    "fallbackToFirstValue": false,
-    "extract": [{
-      "byLabel": [ {
-        "includes": "Memory Total"
-      }
-      ]
-    }]
-  }]
+  }
+]
 }

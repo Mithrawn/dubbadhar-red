@@ -4,12 +4,12 @@ html{
 }
 body{
     background: #000;
-    background-image: url(/img/dubbadhar.png);
+    background-image: url(/img/dubbadhar_nightcity.png);
     background-position: top right;
     background-size: cover;
     background-repeat: no-repeat;
     overflow: hidden;
-    color: #fff;
+    color: #000;
     text-align: center;
 }
 .cont{
