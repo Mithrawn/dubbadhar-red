@@ -6,6 +6,8 @@ Special thanks to LeonPro12 for the initial rework of dubbadhar, which this proj
 For questions about his original design and more visit his thread at the official ModBros forum (https://www.mod-bros.com/en/forum/t/dubbadhar-red-theme-download~1160).
 
 # Installation
-Download the zip from: [No Release yet].
+Download the zip from: https://github.com/Mithrawn/dubbadhar-yellow/releases.
 
 Copy the folder inside the zip into: %LocalAppData%\MoBro_Local\public\theme.
+# Preview
+![preview_yellow.PNG](https://github.com/Mithrawn/dubbadhar-yellow/blob/master/preview_yellow.PNG)
